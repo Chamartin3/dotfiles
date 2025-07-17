@@ -1,0 +1,54 @@
+# For the benefit of emacs users: -*- shell-script -*-
+###########################
+# xbindkeys configuration #
+###########################
+#
+# Version: 1.8.7
+#
+# If you edit this file, do not forget to uncomment any lines
+# that you change.
+# The pound(#) symbol may be used anywhere for comments.
+#
+# To specify a key, you can use 'xbindkeys --key' or
+# 'xbindkeys --multikey' and put one of the two lines in this file.
+#
+# The format of a command line is:
+#    "command to start"
+#       associated key
+#
+#
+# A list of keys is in /usr/include/X11/keysym.h and in
+# /usr/include/X11/keysymdef.h
+# The XK_ is not needed.
+#
+# List of modifier:
+#   Release, Control, Shift, Mod1 (Alt), Mod2 (NumLock),
+#   Mod3 (CapsLock), Mod4, Mod5 (Scroll).
+#
+# By defaults, xbindkeys does not pay attention with the modifiers
+# NumLock, CapsLock and ScrollLock.
+# Uncomment the lines above if you want to pay attention to them.
+
+#keystate_numlock = enable
+#keystate_capslock = enable
+#keystate_scrolllock= enable
+
+"xbindkeys_show" 
+  control+shift + q
+
+# -------
+# Mouse configs 
+# --------
+# B:9 Ahead button of mouse 
+"xdotool key Page_Up"
+  b:9
+"bash -c 'if [[ $(xdotool getwindowname $(xdotool getactivewindow)) == *"Chromium"* ]]; then xdotool key  --clearmodifiers alt+Right; else xdotool key --clearmodifiers ctrl+y; fi '"
+  control + b:9
+  
+# B:8 Back button of mouse
+"xdotool key Page_Down"
+  b:8
+
+"bash -c 'if [[ $(xdotool getwindowname $(xdotool getactivewindow)) == *"Chromium"* ]]; then xdotool key --clearmodifiers alt+Left; else xdotool key --clearmodifiers ctrl+z; fi'"
+  control + b:8
+

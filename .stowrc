@@ -1,0 +1,6 @@
+-vv
+--target=~
+--ignore=."\.stow-local-ignore$"
+--ignore=."lazy-lock\.json$"
+--ignore=.stowrc
+--ignore=DS_Store

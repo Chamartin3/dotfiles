@@ -1,0 +1,27 @@
+swipe:
+  3:
+    down:
+      command: "krunner" # Launcher
+
+    left:
+      command: "xdotool key Super_L+ctrl+Right" # Next Desktop
+
+    right:
+      command: "xdotool key Super_L+ctrl+Left" # Previous Desktop
+    up:
+      command: "xdotool key ctrl+F10" # Show all Activities
+  4:
+    up:
+      command: "xdotool key Super_L+F8" # Show all Desktops
+pinch:
+  3:
+    in:
+      command: "xdotool key Super_L+shift+Print" # Screenshot
+  4:
+    out:
+      command: "xdotool key alt+F9" # Hide Alil
+      threshold: 0.5
+    # out: # threshold: 0.5, interval: 0.5pinch:
+    # command: 'spectacle'
+    in: # threshold: 0.5, interval: 0.5pinch:
+      command: "copyq show"

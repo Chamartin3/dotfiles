@@ -1,0 +1,143 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+
+format = """
+[░▒▓](#a3aed2)\
+[](bg:#a3aed2 fg:#090c0c)\
+[](bg:#769ff0 fg:#a3aed2)\
+$directory\
+[](fg:#769ff0 bg:#394260)\
+$git_branch\
+$git_status\
+[](fg:#394260 bg:#212736)\
+$nodejs\
+$rust\
+$golang\
+$docker_context\
+$lua\
+$rust\
+$package\
+$golang\
+$php\
+$pipenv\
+$python\
+[▓](fg:#1d2230)\
+
+${custom.zsh}\
+${custom.docker-compose}\
+${custom.firebase}\
+${custom.workspace}\
+\n$character"""
+
+[directory]
+style = "fg:#1a1c1f bg:#769ff0"
+format = "[ $path ]($style)"
+truncation_length = 8
+truncation_symbol = "…/"
+
+[git_branch]
+symbol = ""
+style = "bg:#394260"
+format = '[[ $symbol $branch ](fg:#769ff0 bg:#394260)]($style)'
+
+[git_status]
+style = "bg:#394260"
+up_to_date=' ✔ '
+stashed='  '
+modified=' '
+staged=' '
+ahead='[ ](fg:#14f50c  bg:#394260)'
+behind='[ ](fg:#ff0000 bg:#394260)'
+untracked=" ❓"
+format = '[[(|$all_status$ahead_behind|)](fg:#769ff0 bg:#394260)]($style)'
+
+
+[nodejs]
+symbol = ""
+style = "bg:#212736"
+format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
+
+[rust]
+symbol = ""
+style = "bg:#212736"
+format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
+
+[golang]
+symbol = ""
+style = "bg:#212736"
+format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
+
+[php]
+symbol = ""
+style = "bg:#212736"
+format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
+
+
+
+[time]
+disabled = false
+time_format = "%R" # Hour:Minute Format
+style = "bg:#1d2230"
+format = '[[  $time ](fg:#a0a9cb bg:#1d2230)]($style)'
+
+
+#
+# [directory]
+# style = "fg:#1d2230 bg:#568056"
+# format = "[ $path ]($style)"
+# truncation_length = 3
+# truncation_symbol = "…/"
+# repo_root_style = "bg:#568056 bold underline"
+# before_repo_root_style = "bg:#568056"
+# repo_root_format = """\
+# [$before_root_path]($before_repo_root_style)\
+# [<$repo_root >]($repo_root_style)\
+# [$path]($style)\
+# [$read_only]($read_only_style)\
+# """
+# [directory.substitutions]
+# "Documents" = " "
+# "Downloads" = " "
+# "Music" = " "
+# "Pictures" = " "
+#
+# [package]
+# format = '[$version]() '
+#
+# [git_branch]
+# symbol = ""
+# style = "bg:#568056"
+# format = '[[ $symbol $branch ](fg:#FFFFFF bg:#568056)]($style)'
+#
+# [git_metrics]
+# format = "([ +$added]($added_style))([-$deleted ]($deleted_style))"
+# disabled = false
+# added_style="bold green bg:#FFFFFF"
+# deleted_style="bold red bg:#FFFFFF"
+#
+
+[python]
+style='yellow bold bg:#1d2230'
+format='[ ${symbol}${pyenv_prefix}(${version} )(\($virtualenv\) )]($style)'
+
+
+[custom.pipenv]
+command = 'echo $PIPENV_ACTIVE'
+format = '[🐍 $output](fg:#1d2230)'
+
+[custom.firebase]
+format = '🔥'
+detect_files=['firebaserc', 'firebase.json']
+
+# [custom.docker-compose]
+# command='zsh $STARSHIP_RUN_FUCTION "dc_services_running"'
+# format = """[ ](fg:#212736 bg:#0ebde9)[ 🐳📦 $output](fg:white bg:#0ebde9 bold)[](fg:#0ebde9)"""
+# ignore_timeout = true
+# detect_files = ['docker-compose.yml', 'docker-compose.yaml', 'Dockerfile']
+#
+# #$output
+# [custom.workspace]
+# command ='echo $ACTIVE_WORKSPACE_NAME'
+# when = ''' test "$ACTIVE_WORKSPACE_PATH" '''
+# format = "  $output  "
+# ignore_timeout = true
+#

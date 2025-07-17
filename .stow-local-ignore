@@ -1,0 +1,10 @@
+\.stow-local-ignore
+
+# Ignore the configs folder
+^/lazy-lock.json$
+# Common files/folders to ignore
+\.git
+\.gitignore
+^/README.*
+^/LICENSE.*
+^/COPYING
