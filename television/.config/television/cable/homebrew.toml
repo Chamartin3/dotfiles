@@ -1,0 +1,36 @@
+[metadata]
+name = "homebrew"
+description = "Browse homebrew packages"
+requirements = ["brew"]
+
+[source]
+command = "brew list"
+
+[preview]
+command = "brew info '{}'"
+
+[keybindings]
+shortcut = "f11"
+ctrl-u = "actions:update"
+ctrl-U = "actions:upgrade"
+ctrl-R = "actions:remove"
+
+[actions.update]
+description = "Update the package"
+command = "brew update"
+mode = "fork"
+
+[actions.upgrade]
+description = "Upgrade the package"
+command = "brew upgrade '{}'"
+mode = "fork"
+
+[actions.remove]
+description = "Remove the package"
+command = "brew uninstall '{}'"
+
+[ui]
+preview_panel = { size = 60 }
+
+
+
