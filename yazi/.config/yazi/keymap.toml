@@ -200,6 +200,34 @@ on = [ "b", "D" ]
 run = "plugin bookmarks --args=delete_all"
 desc = "Delete all bookmarks"
 
+# Git status toggle
+[[mgr.prepend_keymap]]
+on = [ "g", "s" ]
+run = "linemode git"
+desc = "Toggle git status linemode"
+
+
+[[mgr.prepend_keymap]]
+on = "H"
+run = "plugin duckdb -1"
+desc = "Scroll one column to the left"
+
+[[mgr.prepend_keymap]]
+on = "L"
+run = "plugin duckdb +1"
+desc = "Scroll one column to the right"
+
+[[mgr.prepend_keymap]]
+on = ["g", "o"]
+run = "plugin duckdb -open"
+desc = "open with duckdb"
+
+[[mgr.prepend_keymap]]
+on = ["g", "u"]
+run = "plugin duckdb -ui"
+desc = "open with duckdb ui"
+
+
 
 [tasks]
 
@@ -332,6 +360,11 @@ keymap = [
 	{ on = "~",    run = "help", desc = "Open help" },
 	{ on = "<F1>", run = "help", desc = "Open help" },
 ]
+[[mgr.prepend_keymap]]
+on   = [ "g", "c" ]
+run  = "plugin vcs-files"
+desc = "Show Git file changes"
+
 
 [help]
 

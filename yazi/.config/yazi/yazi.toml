@@ -9,7 +9,7 @@ sort_sensitive = false
 sort_reverse 	 = false
 sort_dir_first = true
 sort_translit  = false
-linemode       = "none"
+# linemode       = "git"
 show_hidden    = false
 show_symlink   = true
 scrolloff      = 5
@@ -43,7 +43,8 @@ extract = [
 { run = 'ya pub extract --list "$@"', desc = "Extract here" },
 ]
 play = [
-	{ run = 'mpv --force-window "$@"', orphan = true, for = "unix" },
+	{ run = 'ffplay -autoexit "$1"', orphan = true, for = "unix", desc = "Play with ffplay" },
+	{ run = 'xdg-open "$1"', orphan = true, for = "unix", desc = "Open with default app" },
 	{ run = '''mediainfo "$1"; echo "Press enter to exit"; read _''', block = true, desc = "Show media info", for = "unix" },
 ]
 cast_as_playlist = [
@@ -91,14 +92,39 @@ suppress_preload = false
 
 [plugin]
 
+# Git fetchers for status integration
+prepend_fetchers = [
+	{ id = "git", name = "*", run = "git" },
+	{ id = "git", name = "*/", run = "git" },
+]
+
 prepend_previewers = [
     { mime = "{image,audio,video}/*", run = "mediainfo"},
     { mime = "application/x-subrip", run = "mediainfo"},
  { mime = "text/csv", run = "miller"},
     { name = "*.ipynb", run = "rich-preview"}, # for jupyter notebooks (.ipynb)
-    { name = "*.json", run = "rich-preview"}, # for json (.json) files
-{ name = "*.md", run = "glow" },
+    # { name = "*.json", run = "rich-preview"}, # for json (.json) files
+# ~/.config/yazi/yazi.toml
+  {name = "*.md", run  = 'piper -- CLICOLOR_FORCE=1 glow -w=$w -s=dark "$1"'},
+  { name = "*.csv", run = "duckdb" },  
+  {name = "*/", run  = 'piper -- eza -TL=3 -a --git-ignore --color=always --icons=always --group-directories-first --git --no-quotes --ignore-glob="node_modules|__pycache__"  "$1"'},
 
+
+  { name = "*.tsv", run = "duckdb" },  
+  { name = "*.json", run = "duckdb" },  
+  { name = "*.parquet", run = "duckdb" },  
+  { name = "*.txt", run = "duckdb" },  
+  { name = "*.xlsx", run = "duckdb" },  
+  { name = "*.db", run = "duckdb" },
+  { name = "*.duckdb", run = "duckdb" }
+]
+prepend_preloaders = [  
+  { name = "*.csv", run = "duckdb", multi = false },  
+  { name = "*.tsv", run = "duckdb", multi = false },  
+  { name = "*.json", run = "duckdb", multi = false },  
+  { name = "*.parquet", run = "duckdb", multi = false },
+  { name = "*.txt", run = "duckdb", multi = false },  
+  { name = "*.xlsx", run = "duckdb", multi = false }
 ]
 fetchers = [
 	# Mimetype
