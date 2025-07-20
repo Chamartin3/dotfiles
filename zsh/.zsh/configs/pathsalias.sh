@@ -63,5 +63,9 @@ alias dcup="docker compose up"
 alias dcdn="docker compose down"
 alias dcrun="docker compose run"
 
+alias ll='eza  -l --icons=always'
+# alias ll='eza -l'
+# alias la='eza -la'
+#
 # Custom
 _create_aliases "${ALIAS_LIST[@]}"
