@@ -1,0 +1,36 @@
+[metadata]
+name = "obsidian-tasks"
+description = "Browse Obsidian vault tasks"
+requirements = ["obsidian"]
+
+[source]
+command = [
+  "cd \"$DEFAULT_OBSIDIAN_VAULT_PATH\" && obsidian tasks todo format=tsv 2>/dev/null",
+  "cd \"$DEFAULT_OBSIDIAN_VAULT_PATH\" && obsidian tasks done format=tsv 2>/dev/null",
+]
+display = "{split:\t:1}"
+no_sort = true
+frecency = false
+
+[preview]
+command = "cd \"$DEFAULT_OBSIDIAN_VAULT_PATH\" && obsidian task path='{split:\t:2}' line='{split:\t:3}' 2>/dev/null && echo && echo '== Context ==' && bat --style=plain --color=always --highlight-line '{split:\t:3}' --line-range '{split:\t:3}:+10' '{split:\t:2}' 2>/dev/null"
+
+[ui]
+layout = "portrait"
+
+[ui.preview_panel]
+size = 50
+
+[keybindings]
+enter = "actions:open"
+ctrl-d = "actions:toggle"
+
+[actions.open]
+description = "Open file at task location"
+command = '''F='{split:\t:2}'; F="${F%.md}"; F="${F// /%20}"; V="${DEFAULT_OBSIDIAN_VAULT// /%20}"; obsidian "obsidian://open?vault=$V&file=$F" 2>/dev/null'''
+mode = "execute"
+
+[actions.toggle]
+description = "Toggle task status"
+command = "cd \"$DEFAULT_OBSIDIAN_VAULT_PATH\" && obsidian task ref='{split:\t:2}:{split:\t:3}' toggle 2>/dev/null"
+mode = "fork"

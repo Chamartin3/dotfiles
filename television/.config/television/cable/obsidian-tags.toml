@@ -1,0 +1,25 @@
+[metadata]
+name = "obsidian-tags"
+description = "Browse Obsidian vault tags"
+requirements = ["obsidian"]
+
+[source]
+command = "cd \"$DEFAULT_OBSIDIAN_VAULT_PATH\" && obsidian tags counts sort=count 2>/dev/null"
+output = "{split:\t:0}"
+
+[preview]
+command = "cd \"$DEFAULT_OBSIDIAN_VAULT_PATH\" && obsidian tag name='{split:\t:0}' verbose 2>/dev/null"
+
+[ui]
+layout = "landscape"
+
+[ui.preview_panel]
+size = 50
+
+[keybindings]
+enter = "actions:search"
+
+[actions.search]
+description = "Search vault for files with this tag"
+command = '''V="${DEFAULT_OBSIDIAN_VAULT// /%20}"; Q='{split:\t:0}'; Q="${Q// /%20}"; obsidian "obsidian://search?vault=$V&query=$Q" 2>/dev/null'''
+mode = "execute"

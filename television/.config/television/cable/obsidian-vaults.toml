@@ -1,0 +1,59 @@
+[metadata]
+name = "obsidian-vaults"
+description = "Browse and select Obsidian vaults"
+requirements = ["obsidian"]
+
+[source]
+command = "obsidian vaults verbose 2>/dev/null | while IFS=$'\\t' read -r name path; do mtime=$(stat -c %Y \"$path\" 2>/dev/null || echo 0); echo -e \"$mtime\\t$name\\t$path\"; done | sort -rn | cut -f2-"
+no_sort = true
+output = "{split:\t:0}"
+
+[preview]
+command = "P='{split:\t:1}'; echo 'Vault:     {split:\t:0}'; echo \"Path:      $P\"; echo \"Files:     $(find \"$P\" -name '*.md' 2>/dev/null | wc -l)\"; echo \"Folders:   $(find \"$P\" -type d 2>/dev/null | wc -l)\"; echo \"Size:      $(du -sh \"$P\" 2>/dev/null | cut -f1)\""
+
+[ui]
+layout = "landscape"
+
+[ui.input_bar]
+header = "Obsidian Vaults"
+
+[ui.preview_panel]
+size = 40
+
+[keybindings]
+enter = "actions:open"
+ctrl-f = "actions:files"
+ctrl-s = "actions:search"
+ctrl-t = "actions:tags"
+ctrl-k = "actions:tasks"
+ctrl-e = "actions:templates"
+
+[actions.open]
+description = "Open vault in Obsidian"
+command = '''V='{split:\t:0}'; V="${V// /%20}"; obsidian "obsidian://open?vault=$V" 2>/dev/null'''
+mode = "execute"
+
+[actions.files]
+description = "Browse vault files"
+command = "export DEFAULT_OBSIDIAN_VAULT='{split:\t:0}' DEFAULT_OBSIDIAN_VAULT_PATH='{split:\t:1}'; tv obsidian-files --input-header 'Obsidian Files [{split:\t:0}]'"
+mode = "execute"
+
+[actions.search]
+description = "Search vault content"
+command = "export DEFAULT_OBSIDIAN_VAULT='{split:\t:0}' DEFAULT_OBSIDIAN_VAULT_PATH='{split:\t:1}'; tv obsidian-search --input-header 'Obsidian Search [{split:\t:0}]'"
+mode = "execute"
+
+[actions.tags]
+description = "Browse vault tags"
+command = "export DEFAULT_OBSIDIAN_VAULT='{split:\t:0}' DEFAULT_OBSIDIAN_VAULT_PATH='{split:\t:1}'; tv obsidian-tags --input-header 'Obsidian Tags [{split:\t:0}]'"
+mode = "execute"
+
+[actions.tasks]
+description = "Browse vault tasks"
+command = "export DEFAULT_OBSIDIAN_VAULT='{split:\t:0}' DEFAULT_OBSIDIAN_VAULT_PATH='{split:\t:1}'; tv obsidian-tasks --input-header 'Obsidian Tasks [{split:\t:0}]'"
+mode = "execute"
+
+[actions.templates]
+description = "Browse vault templates"
+command = "export DEFAULT_OBSIDIAN_VAULT='{split:\t:0}' DEFAULT_OBSIDIAN_VAULT_PATH='{split:\t:1}'; tv obsidian-templates --input-header 'Obsidian Templates [{split:\t:0}]'"
+mode = "execute"
