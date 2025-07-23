@@ -1,0 +1,32 @@
+[metadata]
+name = "browser-profiles"
+description = "List and manage browser profiles"
+requirements = ["browser-manager"]
+
+[source]
+command = "browser-manager profiles"
+ansi = true
+output = "{strip_ansi|split:\t:0}"
+
+[preview]
+command = "browser-manager profile-info '{strip_ansi|split:\t:0}'"
+
+[keybindings]
+enter = "actions:launch"
+ctrl-b = "actions:bookmarks"
+ctrl-d = "actions:set-default"
+
+[actions.launch]
+description = "Launch browser with this profile"
+command = "browser-manager open -p '{strip_ansi|split:\t:0}'"
+mode = "execute"
+
+[actions.bookmarks]
+description = "Browse bookmarks for this profile"
+command = "BROWSER_PROFILE='{strip_ansi|split:\t:0}' tv browser-bookmarks"
+mode = "execute"
+
+[actions.set-default]
+description = "Set as default browser profile"
+command = "browser-manager set-default '{strip_ansi|split:\t:0}'"
+mode = "fork"
