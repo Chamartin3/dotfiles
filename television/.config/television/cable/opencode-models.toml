@@ -1,0 +1,19 @@
+
+[metadata]
+name = "opencode-models"
+description = "Available  models for OpenCode"
+requirements = ["opencode"]
+
+[source]
+command = "opencode models"
+
+
+[keybindings]
+enter= "actions:launch"
+
+[actions.launch]
+description = "Launch session with the selected model"
+command = "opencode --model '{}'"
+mode = "execute"
+
+
