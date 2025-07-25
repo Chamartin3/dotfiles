@@ -1,0 +1,71 @@
+[metadata]
+name = "gh-repos"
+description = "List GitHub repos for the current user"
+requirements = ["gh", "jq"]
+
+[source]
+command = [
+  '''gh repo list --limit 100 --json name,description,primaryLanguage,isPrivate,pushedAt,stargazerCount --jq '[.[] | . + {lang: (.primaryLanguage.name // "-")}] | sort_by(.pushedAt) | reverse | .[] | "\(if .isPrivate then "\u001b[33m🔒\u001b[39m" else "\u001b[32m🌐\u001b[39m" end) \(.name)\t\u001b[90m\(.lang)\u001b[39m\t\u001b[90m\(.description // "")\u001b[39m"' ''',
+  '''gh repo list --limit 100 --fork --json name,description,primaryLanguage,isPrivate,pushedAt,stargazerCount --jq '[.[] | . + {lang: (.primaryLanguage.name // "-")}] | sort_by(.pushedAt) | reverse | .[] | "\(if .isPrivate then "\u001b[33m🔒\u001b[39m" else "\u001b[32m🌐\u001b[39m" end) \(.name)\t\u001b[90m\(.lang)\u001b[39m\t\u001b[90m\(.description // "")\u001b[39m"' ''',
+  '''gh repo list --limit 100 --source --json name,description,primaryLanguage,isPrivate,pushedAt,stargazerCount --jq '[.[] | . + {lang: (.primaryLanguage.name // "-")}] | sort_by(.pushedAt) | reverse | .[] | "\(if .isPrivate then "\u001b[33m🔒\u001b[39m" else "\u001b[32m🌐\u001b[39m" end) \(.name)\t\u001b[90m\(.lang)\u001b[39m\t\u001b[90m\(.description // "")\u001b[39m"' ''',
+]
+ansi = true
+no_sort = true
+output = "{strip_ansi|split:\t:0|split: :1}"
+
+[preview]
+command = '''REPO='{strip_ansi|split:\t:0|split: :1}'; OWNER=$(gh api user --jq .login 2>/dev/null); gh repo view "$REPO" --json name,description,primaryLanguage,isPrivate,stargazerCount,forkCount,url,pushedAt,createdAt,defaultBranchRef,watchers,diskUsage,issues | jq -r --arg owner "$OWNER" --argjson commit "$(gh api "repos/$OWNER/$REPO/commits?per_page=1" --jq '[.[] | {sha: .sha[:7], message: (.commit.message | split("\n")[0]), date: .commit.author.date, author: .commit.author.name}] | .[0] // {sha:"—",message:"—",date:"—",author:"—"}')" '
+"  \u001b[1m\(.name)\u001b[0m",
+"  \u001b[34m\(.url)\u001b[39m",
+"",
+"  \u001b[90m────────────────────────────────────────\u001b[39m",
+"",
+"  \u001b[36mDescription:\u001b[39m  \(.description // "—")",
+"  \u001b[36mLanguage:\u001b[39m     \(.primaryLanguage.name // "—")",
+"  \u001b[36mVisibility:\u001b[39m   \(if .isPrivate then "Private" else "Public" end)",
+"  \u001b[36mDefault branch:\u001b[39m \(.defaultBranchRef.name)",
+"  \u001b[36mStars:\u001b[39m        \(.stargazerCount)  \u001b[36mForks:\u001b[39m \(.forkCount)  \u001b[36mWatchers:\u001b[39m \(.watchers.totalCount)",
+"  \u001b[36mOpen issues:\u001b[39m  \(.issues.totalCount)",
+"  \u001b[36mDisk usage:\u001b[39m   \(.diskUsage) KB",
+"",
+"  \u001b[36mCreated:\u001b[39m  \(.createdAt | split("T")[0])",
+"  \u001b[36mPushed:\u001b[39m   \(.pushedAt | split("T")[0])",
+"",
+"  \u001b[90m────────────────────────────────────────\u001b[39m",
+"",
+"  \u001b[1mLast commit\u001b[0m",
+"  \u001b[33m\($commit.sha)\u001b[39m \($commit.message)",
+"  \u001b[90m\($commit.author) · \($commit.date | split("T")[0])\u001b[39m"'
+'''
+
+[ui]
+layout = "portrait"
+
+[ui.preview_panel]
+size = 40
+
+[keybindings]
+enter = "actions:open-web"
+ctrl-c = "actions:clone"
+ctrl-p = "actions:prs"
+ctrl-i = "actions:issues"
+
+[actions.open-web]
+description = "Open repo in browser"
+command = "gh repo view '{strip_ansi|split:\t:0|split: :1}' --web"
+mode = "execute"
+
+[actions.clone]
+description = "Clone repo locally"
+command = "gh repo clone '{strip_ansi|split:\t:0|split: :1}'"
+mode = "execute"
+
+[actions.prs]
+description = "Browse open PRs"
+command = "cd \"$(gh repo view '{strip_ansi|split:\t:0|split: :1}' --json name --jq .name 2>/dev/null || echo .)\" 2>/dev/null; tv gh-prs"
+mode = "execute"
+
+[actions.issues]
+description = "Open issues in browser"
+command = "gh issue list --repo '{strip_ansi|split:\t:0|split: :1}' --web"
+mode = "execute"

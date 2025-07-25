@@ -1,0 +1,46 @@
+[metadata]
+name = "flatpak"
+description = "Browse installed Flatpak applications"
+requirements = ["flatpak"]
+
+[source]
+command = [
+  "flatpak list --app --columns=name,application,version",
+  "flatpak list --app --runtime --columns=name,application,version",
+]
+output = "{split:\t:1}"
+
+[preview]
+command = "flatpak info '{split:\t:1}'"
+
+[ui]
+layout = "portrait"
+
+[ui.preview_panel]
+size = 50
+
+[keybindings]
+enter = "actions:run"
+ctrl-u = "actions:update"
+ctrl-U = "actions:update-all"
+ctrl-R = "actions:remove"
+
+[actions.run]
+description = "Launch the application"
+command = "flatpak run '{split:\t:1}'"
+mode = "execute"
+
+[actions.update]
+description = "Update the application"
+command = "flatpak update -y '{split:\t:1}'"
+mode = "fork"
+
+[actions.update-all]
+description = "Update all Flatpak applications"
+command = "flatpak update -y"
+mode = "fork"
+
+[actions.remove]
+description = "Remove the application"
+command = "flatpak uninstall '{split:\t:1}'"
+mode = "fork"
