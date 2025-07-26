@@ -1,0 +1,24 @@
+[metadata]
+name = "tmux-bindings"
+description = "Browse and search Tmux keybindings"
+
+[source]
+command = "$TV_SCRIPTS_DIR/tmux-bindings.sh $HOME/.tmux.conf"
+# Format: icon│key│description│full_command│action_to_execute
+display = "{split:│:0}  {split:│:1}  {split:│:2}"
+output = "{split:│:4}"
+no_sort = true
+
+[preview]
+command = "echo '{split:│:3}' | fold -s -w 80"
+
+[ui.preview_panel]
+size = 35
+
+[keybindings]
+ctrl-y = "actions:copy_binding"
+
+[actions.copy_binding]
+description = "Copy binding to clipboard"
+command = "echo '{split:│:1} → {split:│:2}' | xclip -selection clipboard"
+mode = "fork"

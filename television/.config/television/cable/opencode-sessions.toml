@@ -1,0 +1,61 @@
+[metadata]
+name = "opencode-sessions"
+description = "Manage OpenCode sessions - view, open, delete, and export"
+requirements = ["opencode", "jq", "eza"]
+
+[source]
+command = '''opencode session list --format json 2>/dev/null | jq -r '
+  if length == 0 then
+    "__NEW_SESSION__\t📁 Create new session\t-\t-"
+  else
+    .[] | "\(.id)\t\(.title)\t\(.directory)\t\(.updated)"
+  end
+' 2>/dev/null || echo "__NEW_SESSION__\t📁 Create new session\t-\t-"'''
+no_sort = true
+output = "{split:\t:0}"
+
+[preview]
+command = "$TV_SCRIPTS_DIR/opencode-sessions-preview.sh '{}'"
+
+[ui]
+layout = "portrait"
+
+[ui.preview_panel]
+size = 50
+
+[keybindings]
+enter = "actions:open"
+ctrl-d = ["actions:delete", "reload_source"]
+ctrl-e = "actions:export"
+
+[actions.open]
+description = "Open session in OpenCode (or create new)"
+command = '''
+SESSION_ID="{split:\t:0}"
+if [ "$SESSION_ID" = "__NEW_SESSION__" ]; then
+  opencode
+else
+  opencode --session "$SESSION_ID"
+fi
+'''
+mode = "execute"
+
+[actions.delete]
+description = "Delete selected session"
+command = '''
+SESSION_ID="{split:\t:0}"
+if [ "$SESSION_ID" != "__NEW_SESSION__" ]; then
+  opencode session delete "$SESSION_ID" 2>/dev/null || true
+fi
+'''
+mode = "fork"
+
+[actions.export]
+description = "Export session as JSON"
+command = '''
+SESSION_ID="{split:\t:0}"
+if [ "$SESSION_ID" != "__NEW_SESSION__" ]; then
+  opencode session list --format json 2>/dev/null | jq --arg id "$SESSION_ID" '.[] | select(.id == $id)'
+fi
+'''
+mode = "execute"
