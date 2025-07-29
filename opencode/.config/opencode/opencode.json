@@ -1,0 +1,38 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "provider": {
+    "ollama": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Ollama (local)",
+      "options": {
+        "baseURL": "http://localhost:11434/v1"
+      },
+      "models": {
+        "qwen3:8b": {
+          "name": "Qwen3 8B"
+        },
+        "llama3.2:latest": {
+          "name": "Llama 3.2"
+        }
+      }
+    }
+  },
+  "permission": {
+    "bash": {
+      "./dev.sh *": "allow",
+      "./manage.sh *": "allow"
+    }
+  },
+  "mcp": {
+    "time-server": {
+      "enabled": true,
+      "type": "local",
+      "command": ["docker",
+        "run",
+        "-i",
+        "--rm",
+        "mcp/time"
+      ]
+    }
+  }
+}
