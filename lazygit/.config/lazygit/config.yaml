@@ -1,0 +1,38 @@
+os:
+  openCommand: "nvim"
+  edit: "nvim {{filename}}"
+  editAtLine: "nvim +{{line}} {{filename}}"
+  editAtLineAndWait: "nvim --block --line={{line}} {{filename}}"
+  editInTerminal: true
+  openDirInEditor: "nvim {{dir}}"
+git:
+  commitPrefixes:
+    tier3:
+      pattern: "^(.*?)_(.*?)(_|$)"
+      replace: "$1-$2:"
+customCommands:
+  - key: "O"
+    command: 'echo "{{.SelectedFile.Name}}:{{.SelectedHunk.StartLine}}" > /tmp/lazygit_selected_file && nvr --remote-send "<cmd>e readfile(\"/tmp/lazygit_selected_file\")[0]<CR>"'
+    context: "files"
+    description: "Print file name in Neovim"
+
+  - key: "<c-P>"
+    context: "global"
+    command: "pre-commit"
+  - key: <c-J>
+    context: "global"
+    command: |
+      jira issue view $(git branch --show-current | sed -E 's/([[:alpha:]]+)_/\U\1-/g')
+    description: "View the current Branch Jira ticket"
+    showOutput: true
+    outputTitle: "Jira Ticket"
+  - key: "<c-c>"
+    context: "files"
+    prompts:
+      - type: "input"
+        title: "Add Commit Message"
+        key: "Message"
+    command: git commit -m "$(git branch --contains | awk -v m="{{.Form.Message}}" '/\*/{split($2, n, /-/); print (n[1] "-" n[2] ":" m)}')"
+    subprocess: true
+
+    description: "Custom commit message"
