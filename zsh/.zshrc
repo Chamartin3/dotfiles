@@ -1,6 +1,10 @@
+#! bin/zsh
+
 source "$ZSH_UTILS_DIR/validation.zsh"
 source "$ZSH_UTILS_DIR/base.zsh"
 source "$ZSH_UTILS_DIR/workenvs.zsh"
+
+
 compose_enviroment_from_vars 
 
 
@@ -38,3 +42,19 @@ shell_tools=(
 )
 _source_from_folder $SHELL_TOOLS_SRC ${shell_tools[@]}
 
+
+#  ------------------------------------
+# Tmux session 
+initialize_tmux_session
+#  ------------------------------------
+#
+# Load shell scripts from the context`` 
+for script ($SHELL_SCRIPTS_TO_LOAD); do
+  validate:source_if_exists  "$script" ;
+done
+
+
+# eval "$(pyenv init -)"
+
+# Generated for envman. Do not edit.
+[ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"
