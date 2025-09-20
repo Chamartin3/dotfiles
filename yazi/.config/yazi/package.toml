@@ -1,0 +1,9 @@
+[plugin]
+deps = [
+	{ use = "Ape/mediainfo", rev = "c69314e" }, 
+	{ use = "yazi-rs/plugins:chmod", rev = "a3ee717" }, 
+	{ use = "AnirudhG07/rich-preview", rev = "df9b34e" }, 
+	{ use = "Reledia/glow", rev = "536185a" }, { use = "Rolv-Apneseth/starship", rev = "9c37d37" }, { use = "pirafrank/what-size", rev = "6791caa" }, { use = "dedukun/bookmarks", rev = "35da107" }]
+
+[flavor]
+deps = [{ use = "yazi-rs/flavors:catppuccin-macchiato", rev = "2a95af8" }]

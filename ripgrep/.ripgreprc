@@ -1,0 +1,37 @@
+
+
+--type-add
+template:*.{html,jsx,vue,pug}*
+#
+--type-add
+config:*.{json,yaml,yml,ini}*
+#
+--type-add
+tests:*{.test.js,.spec.js,.test.ts,.spec.ts,test*}*
+
+--type-add
+video:*.{mp4,mkv,flv,avi,mov,insv,lrv}
+
+
+--max-columns=200
+--max-columns-preview
+
+# Search hidden files / directories (e.g. dotfiles) by default
+--hidden
+
+--glob
+!.git/*
+
+--glob
+!.test_durations
+
+--glob
+!node_modules/*
+#
+--glob
+!__pycache__/*
+
+# Set the colors.
+--colors=line:style:bold
+
+--smart-case
