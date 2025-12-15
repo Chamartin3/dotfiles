@@ -61,7 +61,7 @@
     url="${(j://:)${(s:/:)urls[$1]}[1,2]}"
   fi
 
-  $BROWSER "$url" &&
+  $BROWSER "$url" &>/dev/null &!
 }
 
 

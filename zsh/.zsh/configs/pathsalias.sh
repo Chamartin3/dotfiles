@@ -14,10 +14,10 @@ export PATH="$HOME/.local/bin:$PATH"
 #Brew
 export PATH="$HOMEBREW_BINARIES:$PATH"
 eval "$(brew shellenv)"
+export BREW_PREFIX="${HOMEBREW_PREFIX:-$(brew --prefix)}"
 
 #Rust Cargo
 export PATH="$PATH:$HOME/.cargo/bin"
-. "$HOME/.cargo/env"
 
 #Ruby binaries
 export GEM_HOME="$HOME/.gem"
@@ -30,14 +30,63 @@ export PATH=$PATH:$GOPATH/bin
 
 #NPM
 export PATH=~/.npm-global/bin:$PATH
-#NVM
+#NVM (lazy-loaded for faster startup)
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
+_lazy_load_nvm() {
+    unset -f nvm node npm npx claude
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+    # Re-add nvm's default node bin to PATH after nvm loads
+    [ -s "$NVM_DIR/versions/node/v24.7.0/bin/claude" ] && export PATH="$NVM_DIR/versions/node/v24.7.0/bin:$PATH"
+}
+nvm() {
+    _lazy_load_nvm
+    nvm "$@"
+}
+node() {
+    _lazy_load_nvm
+    node "$@"
+}
+npm() {
+    _lazy_load_nvm
+    npm "$@"
+}
+npx() {
+    _lazy_load_nvm
+    npx "$@"
+}
+claude() {
+    _lazy_load_nvm
+    claude "$@"
+}
 
-#Pyenv
+#Pyenv (lazy-loaded for faster startup)
 export PYENV_ROOT="$HOME/.pyenv"
-export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init --path)"
+export PATH="$PYENV_ROOT/bin:$PYENV_ROOT/shims:$PATH"
+_lazy_load_pyenv() {
+    unset -f pyenv python python3 pip pip3
+    eval "$(pyenv init --path)"
+    eval "$(pyenv init -)"
+}
+pyenv() {
+    _lazy_load_pyenv
+    pyenv "$@"
+}
+python() {
+    _lazy_load_pyenv
+    python "$@"
+}
+python3() {
+    _lazy_load_pyenv
+    python3 "$@"
+}
+pip() {
+    _lazy_load_pyenv
+    pip "$@"
+}
+pip3() {
+    _lazy_load_pyenv
+    pip3 "$@"
+}
 
 export CHROME_INSTALLATION_PATH="$HOME/.var/app/org.chromium.Chromium/config/chromium"
 
@@ -51,9 +100,14 @@ append_dirs_to_path $DIRS_TO_PATH
 # Aliases
 # ----------------------
 
-# Python
+# Python (python/python3 lazy-loaded via pyenv above)
+# Keep the python->python3 alias for compatibility with scripts that expect 'python'
 alias python='python3'
 alias pipenv='python3 -m pipenv'
+
+# Television scripts
+export TV_SCRIPTS_DIR="$HOME/.config/television/scripts"
+
 # alias ipython='python3 -m IPython'
 
 # Docker

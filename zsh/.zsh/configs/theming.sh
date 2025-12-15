@@ -25,8 +25,8 @@ eval "$(starship init zsh)"
 # -------------
 
 
-export ZSH_HIGHLIGHT_HIGHLIGHTERS_DIR=$HOMEBREW_SHARE/zsh-syntax-highlighting/highlighters
-source $HOMEBREW_SHARE/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+export ZSH_HIGHLIGHT_HIGHLIGHTERS_DIR="$BREW_PREFIX/share/zsh-syntax-highlighting/highlighters"
+source "$BREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 
 FAST_ALIAS_TIPS_PREFIX="💡 $(tput bold)"
 ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern cursor)

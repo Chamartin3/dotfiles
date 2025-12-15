@@ -38,16 +38,9 @@ done
 
 plugins=(
     git
-    github
     python
     pip
-    pyenv
     aliases
-    alias-finder
-    ubuntu 
-    web-search
-    firebase
-    emoji
 )
 
 for plugin ($plugins); do
@@ -68,6 +61,4 @@ function _alias_finder_configs(){
 }
 
 
-source $(brew --prefix)/share/zsh-history-substring-search/zsh-history-substring-search.zsh
 install_history_search
-_alias_finder_configs
