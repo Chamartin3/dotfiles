@@ -1,0 +1,18 @@
+[metadata]
+name = "nvim-sessions"
+description = "Recent Neovim sessions (auto-session)"
+
+[source]
+command = "ls -t ~/.local/share/nvim/sessions/ | sed 's/%2F/\\//g; s/%7C/|/g; s/%2E/./g; s/\\.vim$//'"
+output = "{0}"
+
+[preview]
+command = "dir=$(echo '{0}' | cut -d'|' -f1) && ls -1 \"$dir\" 2>/dev/null | head -30 || echo 'Directory not found'"
+
+[keybindings]
+enter = "actions:open"
+
+[actions.open]
+description = "Open Neovim in session directory (auto-session restores automatically)"
+command = "dir=$(echo '{0}' | cut -d'|' -f1) && cd \"$dir\" && nvim"
+mode = "execute"

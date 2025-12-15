@@ -38,6 +38,7 @@ shell_tools=(
 	"whereami"
 	"mymake"
 	"nvim"
+	"lazygit"
 
 )
 _source_from_folder $SHELL_TOOLS_SRC ${shell_tools[@]}
