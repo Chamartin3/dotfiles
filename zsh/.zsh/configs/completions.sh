@@ -9,16 +9,13 @@ ENABLE_CORRECTION="true"
 
 COMPLETION_WAITING_DOTS="%F{yellow}waiting...%f"
 
-autoload -Uz compinit && compinit
-
 if type brew &>/dev/null; then
   FPATH=$(brew --prefix)/share/zsh-completions:$FPATH
-
-  autoload -Uz compinit
-  compinit
 fi
 
 fpath+=~/.zfunc
+
+autoload -Uz compinit && compinit
 
 function zsh:restart_completions() {
   rm -f ~/.zcompdump
@@ -32,11 +29,5 @@ eval "$(jira completion zsh)"
 eval "$(glow completion zsh)"
 eval "$(fzf --zsh)"
 eval "$(sesh completion zsh)"
-
-#
-# zstyle ':completion:*' menu select
-fpath+=~/.zfunc
-autoload -Uz compinit
-compinit
 
 zstyle ':completion:*' menu select

@@ -51,9 +51,7 @@ function _load_ssh_keys() {
 }
 
 function append_dirs_to_path() {
-	local tool_dirs=("$@")
-	for tool_dir in "${tool_dirs[@]}"; do
-		local tool_path="$DIRS_TO_PATH/$tool_dir"
+	for tool_path in "${(v)DIRS_TO_PATH[@]}"; do
 		if [[ -d "$tool_path" && ":$PATH:" != *":$tool_path:"* ]]; then
 			PATH="$tool_path:$PATH"
 		fi
