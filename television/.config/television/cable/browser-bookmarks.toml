@@ -19,5 +19,5 @@ enter = "actions:open"
 
 [actions.open]
 description = "Open bookmark in browser (current profile)"
-command = "browser-manager open '{strip_ansi|split:\t:2}'"
+command = "setsid -f browser-manager open '{strip_ansi|split:\t:2}' </dev/null >/dev/null 2>&1"
 mode = "execute"

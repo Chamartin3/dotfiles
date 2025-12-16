@@ -1,0 +1,72 @@
+[metadata]
+name = "ollama-models"
+description = "Browse and manage Ollama models"
+requirements = ["ollama"]
+
+[source]
+command = "ollama list | tail -n +2 | awk 'NF'"
+
+[preview]
+command = "ollama show '{split: :0}'"
+
+[keybindings]
+enter = "actions:run"
+ctrl-o = "actions:one_shot"
+ctrl-v = "actions:clipboard"
+ctrl-f = "actions:file_prompt"
+ctrl-y = "actions:pipe_yank"
+ctrl-a = "actions:api_chat"
+ctrl-s = "actions:show"
+ctrl-p = "actions:pull"
+ctrl-k = "actions:stop"
+ctrl-d = "actions:remove"
+
+[actions.run]
+description = "Interactive chat with the model"
+command = "ollama run '{split: :0}'"
+mode = "execute"
+
+[actions.one_shot]
+description = "One-shot prompt (gum input)"
+command = "bash -c 'p=$(gum write --placeholder \"Enter prompt...\" --height 10 --width 80) && [ -n \"$p\" ] && echo \"$p\" | ollama run {split: :0} | gum pager'"
+mode = "execute"
+
+[actions.clipboard]
+description = "Run with clipboard content as prompt"
+command = "bash -c '(wl-paste 2>/dev/null || xclip -selection clipboard -o) | ollama run {split: :0} | gum pager'"
+mode = "execute"
+
+[actions.file_prompt]
+description = "Pick a file and use its contents as prompt"
+command = "bash -c 'f=$(fd --type f | fzf) && [ -n \"$f\" ] && cat \"$f\" | ollama run {split: :0} | gum pager'"
+mode = "execute"
+
+[actions.pipe_yank]
+description = "One-shot prompt, copy output to clipboard"
+command = "bash -c 'p=$(gum write --placeholder \"Enter prompt...\" --height 10 --width 80) && [ -n \"$p\" ] && echo \"$p\" | ollama run {split: :0} | tee >(wl-copy 2>/dev/null || xclip -selection clipboard) | gum pager'"
+mode = "execute"
+
+[actions.api_chat]
+description = "Generate via API (curl) with gum prompt"
+command = "bash -c 'host=${OLLAMA_HOST:-127.0.0.1:11434}; [[ $host != http*://* ]] && host=http://$host; p=$(gum write --placeholder \"Enter prompt...\" --height 10 --width 80) && [ -n \"$p\" ] && curl -s \"$host/api/generate\" -d \"$(jq -n --arg m {split: :0} --arg p \"$p\" \"{model:\\$m, prompt:\\$p, stream:false}\")\" | jq -r .response | gum pager'"
+mode = "execute"
+
+[actions.show]
+description = "Show model details"
+command = "ollama show '{split: :0}'"
+mode = "fork"
+
+[actions.pull]
+description = "Pull/update selected model"
+command = "ollama pull '{split: :0}'"
+mode = "fork"
+
+[actions.stop]
+description = "Stop running model (unload from memory)"
+command = "ollama stop '{split: :0}'"
+mode = "fork"
+
+[actions.remove]
+description = "Remove selected model"
+command = "ollama rm '{split: :0}'"
+mode = "fork"
