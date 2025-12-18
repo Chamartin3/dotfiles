@@ -7,6 +7,43 @@
 #   zsh:perf --zprof    Function-level profiling via zsh/zprof
 #   zsh:perf --total    Just total startup time (average of 5 runs)
 
+function _zsh_perf_setup() {
+    [[ -z "$ZSH_PROFILE" ]] && return
+    zmodload zsh/datetime
+    LC_NUMERIC=C
+    typeset -gA _zsh_profile_times=()
+    typeset -gA _zsh_profile_categories=()
+    _zsh_profile_start=$EPOCHREALTIME
+    _zsh_profile_current_category="init"
+
+    function source() {
+        local _t=$EPOCHREALTIME
+        builtin source "$@"
+        local _elapsed=$(( (EPOCHREALTIME - _t) * 1000 ))
+        local _label="${1:t}"
+        _zsh_profile_times[$_label]=$_elapsed
+        _zsh_profile_categories[$_label]=$_zsh_profile_current_category
+    }
+
+    function _zsh_profile_point() {
+        local _t=$EPOCHREALTIME
+        "$@"
+        local _elapsed=$(( (EPOCHREALTIME - _t) * 1000 ))
+        _zsh_profile_times[$1]=$_elapsed
+        _zsh_profile_categories[$1]=${_zsh_profile_current_category}
+    }
+}
+
+function _zsh_perf_finalize() {
+    [[ -z "$ZSH_PROFILE" ]] && return
+    unfunction source
+    unfunction _zsh_profile_point
+    local _out="${ZSH_PROFILE_OUT:-/tmp/zsh-profile-$$.tsv}"
+    for _k in ${(k)_zsh_profile_times}; do
+        printf "%.1f\t%s\t%s\n" "$_zsh_profile_times[$_k]" "$_k" "$_zsh_profile_categories[$_k]"
+    done | sort -t$'\t' -k1 -rn > "$_out"
+}
+
 function zsh:perf() {
     local mode="${1:-components}"
     local LC_NUMERIC=C
@@ -45,11 +82,9 @@ function zsh:perf() {
                 return 1
             fi
 
-            # Header
             printf "\n  %-10s  %-40s  %-10s\n" "Time (ms)" "Component" "Category"
             printf "  %-10s  %-40s  %-10s\n" "─────────" "────────────────────────────────────────" "────────"
 
-            # Print sorted results and accumulate total
             local total=0
             while IFS=$'\t' read -r ms component category; do
                 total=$(( total + ${ms%.*} ))
