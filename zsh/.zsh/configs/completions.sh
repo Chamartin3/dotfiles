@@ -44,10 +44,10 @@ _cached_eval() {
     source "$cache_file"
 }
 
+_cached_eval "fzf"  "fzf --zsh"
 _cached_eval "gh"   "gh completion -s zsh"
 _cached_eval "jira" "jira completion zsh"
 _cached_eval "glow" "glow completion zsh"
 _cached_eval "sesh" "sesh completion zsh"
-# NOTE: fzf --zsh is loaded in tools/fzf.zsh — not duplicated here
 
 zstyle ':completion:*' menu select

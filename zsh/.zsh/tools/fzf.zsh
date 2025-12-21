@@ -1,4 +1,3 @@
-_cached_eval "fzf" "fzf --zsh"
 # --- setup fzf theme ---
 fg="#CBE0F0"
 bg="#011628"
